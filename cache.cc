@@ -16,27 +16,21 @@ class Cache::Impl {
   evictor_type evictor_;
   hash_func hasher_;
   index_type memused_;
-  map ourMap_;
 
 public:
   Impl(index_type maxmem, evictor_type evictor, hash_func hasher)
     : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0),
-    ourMap_()
   {
-    ourMap_ = []
-    my_array = new char[600];
   }
 
   ~Impl() = default;
 
   void set(key_type key, val_type val, index_type size)
   {
-    map[key] = val
   }
 
   val_type get(key_type key, index_type& val_size) const
   {
-    int a = 5;
   }
 
   void del(key_type key)
@@ -60,7 +54,6 @@ hash_func hasher)
 
 Cache::~Cache()
 {
-  delete my_array;
 }
 
 
@@ -96,10 +89,4 @@ Cache::index_type
 Cache::space_used() const
 {
   return pImpl_->space_used();
-}
-
-func sdf() {
-  Cache c;
-  c.set(sdfdsf);
-  c.get();
 }
