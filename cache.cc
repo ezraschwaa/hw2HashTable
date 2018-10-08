@@ -7,19 +7,22 @@
 //Notes:
 //We add the brackets to make it a definition
 //adding 'cahce::' attributes the function to the class
+//g++ -c -Wextra -pedantic -Wall cache.cc
 
 #include "cache.hh"
-
+#include <unordered_map>
+using namespace std;
 
 class Cache::Impl {
   index_type maxmem_;
   evictor_type evictor_;
   hash_func hasher_;
   index_type memused_;
+  unordered_map<key_type,val_type> map_;
 
 public:
   Impl(index_type maxmem, evictor_type evictor, hash_func hasher)
-    : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0),
+    : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0), map_()
   {
   }
 
