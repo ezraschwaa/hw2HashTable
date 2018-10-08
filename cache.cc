@@ -18,31 +18,38 @@ class Cache::Impl {
   evictor_type evictor_;
   hash_func hasher_;
   index_type memused_;
-  unordered_map<key_type,val_type> map_;
+  unordered_map<string, void*> map_;
 
 public:
   Impl(index_type maxmem, evictor_type evictor, hash_func hasher)
     : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0), map_()
   {
+
   }
 
   ~Impl() = default;
 
   void set(key_type key, val_type val, index_type size)
   {
+    //map_[key] = val;
+    map_[key] = new val_type[size];
+    for (int i=0; i < size; ++i)
+            map_[i] = val.map_[i];
+    memused_ += size;
   }
 
   val_type get(key_type key, index_type& val_size) const
   {
+    return map_[key];
   }
 
   void del(key_type key)
   {
-
+    map_.erase(key);
   }
   index_type space_used() const
   {
-
+    return memused_;
   }
 };
 
