@@ -11,6 +11,7 @@
 
 #include "cache.hh"
 #include <unordered_map>
+#include <cstring>
 using namespace std;
 
 class Cache::Impl {
@@ -18,30 +19,56 @@ class Cache::Impl {
   evictor_type evictor_;
   hash_func hasher_;
   index_type memused_;
+  string biggest_;
   unordered_map<string, void*> map_;
 
 public:
   Impl(index_type maxmem, evictor_type evictor, hash_func hasher)
-    : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0), map_()
+    : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0), biggest(""), map_()
   {
 
   }
 
   ~Impl() = default;
+  
+  void evict() {
+      // if mem used exceeds max mem evict the biggest element
+      map_.erase(biggest);
+  }
 
   void set(key_type key, val_type val, index_type size)
   {
-    //map_[key] = val;
+    // check if memory used has exceeded max value
+    if (memused_ >= maxmem_) {
+
+       evict()
+    }
+    // assign value in unordered map
     map_[key] = new val_type[size];
+    // deep copy values into cache
     memcpy(map_[key],val,size);
+    // increase memory used
     memused_ += size;
+    // keep track of biggest cache entry
+    if (biggest == "") {
+       biggest = key;
+    } else {
+       // if new entry is greater than previous entry replace the key
+       if (map_[biggest] < size) {
+          biggest = key;
+       }
+    }
   }
 
   val_type get(key_type key, index_type& val_size) const
   {
     //We can't use map_[key] because that is shorthand for map_.operator[](key) 
     //which wants to modify map_.  Because we have const it means
+    //
+    // why can't we use map_.operator[](key)?
+    // what does auto mean in C++
     auto search = map_.find(key);
+    // unordered map search in c++
     if (search != map_.end()){
       return search->second;
     } else {
@@ -51,7 +78,9 @@ public:
 
   void del(key_type key)
   {
+    // remove key from mapping don't we need to modify memused here?
     map_.erase(key);
+    
   }
   index_type space_used() const
   {
