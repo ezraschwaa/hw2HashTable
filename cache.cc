@@ -54,7 +54,7 @@ public:
        biggest_ = key;
     } else {
        // if new entry is greater than previous entry replace the key
-       if (map_[biggest_] < *static_cast<const int*>(size) ){
+       if (map_[biggest_] < map_[key] ){
           biggest_ = key;
        }
     }
