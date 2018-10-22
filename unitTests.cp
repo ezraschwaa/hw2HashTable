@@ -24,23 +24,22 @@ void setTest(Cache c){
 	assert(*static_cast<const double*>(c.get("dec", size)) == 6638.193825670);
 	assert(*static_cast<const float*>(c.get("boat", size)) == 6.0000002);
 	assert(*static_cast<const char*>(c.get("firstletter", size)) == "e");
-	assert(*static_cast<const char**>(c.get("firstprogram", size)) == 8);
+	assert(*static_cast<const char**>(c.get("firstprogram", size)) == "hello world");
 
-
-
-
-	
 }
 
-void delTest(Cache c)
+void delTest(Cache c){
+	int value = 8;
+	Cache::index_type size;
+
+	c.set("delTest",&value1,sizeof(int));
+	c.del("delTest");
+	assert(*static_cast<const int*>(c.get("delTest",size)) == NULL);
+}
 int main()
 {
 	auto c = Cache(500);
 	
-
 	setTest(c);
 	delTest(c);
-	assert(*static_cast<const int*>(c.get("hello", size)) == 8);
-	c.del("hello");
-	assert(*static_cast<const int*>(c.get("hello", size)) == NULL);
 }
