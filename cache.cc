@@ -24,7 +24,7 @@ class Cache::Impl {
 
 public:
   Impl(index_type maxmem, evictor_type evictor, hash_func hasher)
-    : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0), biggest(""), map_()
+    : maxmem_(maxmem), evictor_(evictor), hasher_(hasher), memused_(0), biggest_(""), map_()
   {
 
   }
@@ -33,7 +33,7 @@ public:
   
   void evict() {
       // if mem used exceeds max mem evict the biggest element
-      map_.erase(biggest);
+      map_.erase(biggest_);
   }
 
   void set(key_type key, val_type val, index_type size)
@@ -41,7 +41,7 @@ public:
     // check if memory used has exceeded max value
     if (memused_ >= maxmem_) {
 
-       evict()
+       evict();
     }
     // assign value in unordered map
     map_[key] = new val_type[size];
@@ -50,12 +50,12 @@ public:
     // increase memory used
     memused_ += size;
     // keep track of biggest cache entry
-    if (biggest == "") {
-       biggest = key;
+    if (biggest_ == "") {
+       biggest_ = key;
     } else {
        // if new entry is greater than previous entry replace the key
-       if (map_[biggest] < size) {
-          biggest = key;
+       if (map_[biggest_] < *static_cast<const int*>(size) ){
+          biggest_ = key;
        }
     }
   }
