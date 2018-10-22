@@ -38,8 +38,8 @@ public:
 
   void set(key_type key, val_type val, index_type size)
   {
-    // check if memory used has exceeded max value
-    if (memused_ >= maxmem_) {
+    // check if memory used has exceeded max value also check if there is enough memory for the incoming value
+    if (memused_ + size>= maxmem_) {
 
        evict();
     }
